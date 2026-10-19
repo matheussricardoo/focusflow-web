@@ -1,103 +1,36 @@
-<div align="center">
+# FocusFlow Web
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=ffffff&height=200&section=header&text=Focus%20Flow&fontSize=50&fontColor=000&animation=twinkling&fontAlignY=40&desc=A%20Pomodoro%20app%20to%20maximize%20your%20productivity.&descAlignY=60&descSize=18">
+A Pomodoro application implemented with Rust and Leptos client-side rendering, compiled to WebAssembly. It runs in the browser; it is not a Rust backend service.
 
-<p align="center">
-  <i>A minimalist and elegant Pomodoro timer with ambient sounds, task management, and productivity tracking, rebuilt from the ground up using Rust and Leptos for high-performance Client-Side Rendering (CSR).</i>
-</p>
+## Implemented
 
----
+Timer controls, configurable focus/break intervals, project state, notifications, sound, theme and statistics, with browser LocalStorage persistence. Browser permissions and storage availability affect those features. WebAssembly uses browser JavaScript bindings; no native-speed or performance superiority claim is made without benchmarks.
 
-### Features
+## Run locally
 
-<div align="center">
-
-| Feature | Description |
-|:---:|:---|
-| Design | Monastic minimalist design strictly driven by custom CSS |
-| Native Speed | High-performance logic rendering natively via WebAssembly (WASM) |
-| Task management | In-memory CRUD task management (Add, complete, delete) |
-| Active Focusing | Interactive selection of active projects targeting deep work |
-| Custom intervals | Highly customizable intervals for Focus and Breaks via clean UI Modals |
-| Local Storage | Zero-database architecture, entirely persisted on Browser Cache (`gloo-storage`) |
-| SPA Navigation | Fluid routing toggling without page reloading via Global State Context |
-
-</div>
-
-### Getting Started
-
-To run this project locally, you'll need the Rust compiler, target architectures for web compiling, and `trunk` as the bundler.
+Requires Rust, the WASM target and Trunk. No cloud account or backend service is required.
 
 ```bash
-# Clone the repository
-git clone https://github.com/matheussricardoo/FocusFlow.git
-
-# Navigate to project directory
-cd FocusFlow
-
-# Install Rust WASM architecture
+git clone https://github.com/matheussricardoo/focusflow-web.git
+cd focusflow-web
 rustup target add wasm32-unknown-unknown
-
-# Download Trunk (our web builder pipeline)
 cargo install trunk
-
-# Run the development server with live reloading
-trunk serve --open
+cargo check --target wasm32-unknown-unknown --locked
+trunk serve --address 127.0.0.1
 ```
 
-### Technologies
+Open the local URL printed by Trunk. To build: `trunk build --release`. The GitHub Pages workflow uses `/focusflow-web/` as its deployment base path; this does not establish that Pages is currently available.
 
-This completely rebuilt environment shifts away from typical Node.js loops to offer lighting-fast memory security directly inside your browser.
+## Manual validation
 
-<div align="center">
+Start/pause/reset the timer, change intervals, create/update/delete a project, reload to inspect persistence, and test with notifications denied. Confirm that completing a focus session updates statistics once. Browser interaction is not covered by the build check.
 
-<a href="https://www.rust-lang.org/"><img src="https://skillicons.dev/icons?i=rust" alt="Rust"/></a>
-<a href="https://webassembly.org/"><img src="https://skillicons.dev/icons?i=wasm" alt="WebAssembly"/></a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://skillicons.dev/icons?i=css" alt="Vanilla CSS"/></a>
-<a href="https://github.com/features/actions"><img src="https://skillicons.dev/icons?i=githubactions" alt="GitHub Actions"/></a>
+## Limitations
 
-*Framework: Leptos (Reactive CSR Framework for Rust)*
+All data is local to a browser profile; no server sync, accounts or shared persistence. Browser timing, permissions and background-tab behavior require manual validation. Automated browser tests are future work.
 
-</div>
+## Author and license
 
-### Project Structure
+[Matheus Ricardo](https://github.com/matheussricardoo) · [LinkedIn](https://www.linkedin.com/in/matheussricardoo/)
 
-Following standard Rust Client-Side architectural parameters using Trunk.
-
-```text
-FocusFlow/
-├── src/
-│   ├── components/
-│   │   ├── projects.rs      # Projects UI, State arrays, and CRUD logic
-│   │   ├── settings.rs      # Modal for custom intervals
-│   │   ├── stats.rs         # Analytics views and context footers
-│   │   └── timer.rs         # Pomodoro recursive reactive interval logic
-│   ├── app.rs               # Context Provider, Routing, and LocalStorage Hook
-│   └── main.rs              # Rust insertion pointer point
-├── style/
-│   └── main.css             # Vanilla CSS controlling all Minimalist Layouts
-├── .github/workflows/
-│   └── deploy.yml           # Automated deployment pipeline to GitHub Pages
-├── Cargo.toml               # Rust dependencies (Leptos, Serde, Gloo Storage)
-├── index.html               # Main HTML entry frame
-└── favicon.svg              # Clean SVG graphic logo 
-```
-
-### Author
-
-<div align="center">
-  <a href="https://github.com/matheussricardoo" target="_blank">
-    <img src="https://skillicons.dev/icons?i=github" alt="GitHub"/>
-  </a>
-  <a href="https://www.linkedin.com/in/matheus-ricardo-426452266/" target="_blank">
-    <img src="https://skillicons.dev/icons?i=linkedin" alt="LinkedIn"/>
-  </a>
-</div>
-
-### License
-
-This project is licensed under the MIT License.
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=ffffff&height=120&section=footer"/>
-
-</div>
+See [LICENSE](LICENSE) for the repository license.

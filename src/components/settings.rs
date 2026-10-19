@@ -21,9 +21,9 @@ where
     let cancel = on_close.clone();
 
     let save = move |_| {
-        settings.focus_mins.set(temp_focus.get());
-        settings.break_mins.set(temp_break.get());
-        settings.total_rounds.set(temp_rounds.get());
+        settings.focus_mins.set(temp_focus.get().clamp(1, 120));
+        settings.break_mins.set(temp_break.get().clamp(1, 60));
+        settings.total_rounds.set(temp_rounds.get().clamp(1, 20));
         settings.notifications_enabled.set(temp_notifications.get());
         settings.sound_enabled.set(temp_sound.get());
         settings.sound_volume.set(temp_sound_volume.get());

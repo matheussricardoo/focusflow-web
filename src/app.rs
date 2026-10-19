@@ -60,6 +60,17 @@ impl Default for PersistedSettings {
     }
 }
 
+impl PersistedSettings {
+    pub fn sanitize(&mut self) {
+        self.focus_mins = self.focus_mins.clamp(1, 120);
+        self.break_mins = self.break_mins.clamp(1, 60);
+        self.total_rounds = self.total_rounds.clamp(1, 20);
+        self.sound_volume = if self.sound_volume.is_finite() {
+            self.sound_volume.clamp(0.0, 1.0)
+        } else { 1.0 };
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PersistedTimerState {
     pub time_remaining: u32,
@@ -391,8 +402,9 @@ pub fn play_beep(volume: f64) {
 #[component]
 pub fn App() -> impl IntoView {
     // Load Settings
-    let initial_settings: PersistedSettings =
+    let mut initial_settings: PersistedSettings =
         LocalStorage::get("focusflow_settings").unwrap_or_default();
+    initial_settings.sanitize();
 
     let focus_mins = create_rw_signal(initial_settings.focus_mins);
     let break_mins = create_rw_signal(initial_settings.break_mins);
@@ -833,5 +845,21 @@ pub fn App() -> impl IntoView {
         <Show when=move || show_settings.get() fallback=|| ()>
             <SettingsModal on_close=move || set_show_settings.set(false) />
         </Show>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn stored_settings_are_clamped_before_use() {
+        let mut settings = PersistedSettings {
+            focus_mins: 0, break_mins: u32::MAX, total_rounds: 0,
+            sound_volume: f64::NAN, ..Default::default()
+        };
+        settings.sanitize();
+        assert_eq!((settings.focus_mins, settings.break_mins, settings.total_rounds), (1, 60, 1));
+        assert_eq!(settings.sound_volume, 1.0);
     }
 }
